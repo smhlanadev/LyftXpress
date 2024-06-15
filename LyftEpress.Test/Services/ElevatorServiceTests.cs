@@ -5,7 +5,7 @@ using Moq;
 namespace LyftEpress.Tests.Services
 {
     [TestFixture]
-    internal class ElevatorServiceTest
+    internal class ElevatorServiceTests
     {
         ElevatorService _elevatorService;
 

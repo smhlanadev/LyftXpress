@@ -6,7 +6,7 @@ using Moq;
 namespace LyftEpress.Tests.Services
 {
     [TestFixture]
-    internal class DataServiceTest
+    internal class DataServiceTests
     {
         DataService _dataService;
 
@@ -30,9 +30,9 @@ namespace LyftEpress.Tests.Services
         [TestCase(0)]
         public void DataService_Initialise_Throws_ArgumentOutOfRangeException(int numberOfElevators)
         {
-            // Act
-
             // Arrange
+
+            // Act
 
             // Assert
 
@@ -54,6 +54,7 @@ namespace LyftEpress.Tests.Services
             foreach (var elevator in _dataService.Elevators)
             {
                 Assert.That(elevator.Id, Is.Not.Empty);
+                Assert.That(elevator.Floor, Is.EqualTo(0));
             }
         }
 
