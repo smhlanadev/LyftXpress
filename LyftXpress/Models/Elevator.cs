@@ -1,6 +1,6 @@
 ﻿namespace LyftXpress.Models
 {
-    internal class Elevator
+    public class Elevator
     {
         public Guid Id { get; init; }
         public List<string> RequestList { get; set; } = [];

@@ -5,6 +5,8 @@ VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyftXpress", "LyftXpress\LyftXpress.csproj", "{D4377857-18D7-4C6F-A644-334FB3C68268}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LyftEpress.Tests", "LyftEpress.Test\LyftEpress.Tests.csproj", "{2C4C0CF9-6887-48E0-B496-6114A13D927F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{D4377857-18D7-4C6F-A644-334FB3C68268}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4377857-18D7-4C6F-A644-334FB3C68268}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4377857-18D7-4C6F-A644-334FB3C68268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C4C0CF9-6887-48E0-B496-6114A13D927F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C4C0CF9-6887-48E0-B496-6114A13D927F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C4C0CF9-6887-48E0-B496-6114A13D927F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C4C0CF9-6887-48E0-B496-6114A13D927F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
