@@ -1,4 +1,6 @@
-﻿using LyftXpress.Services.Implementation;
+﻿using LyftXpress.Services.Abstraction;
+using LyftXpress.Services.Implementation;
+using Moq;
 
 namespace LyftEpress.Tests.Services
 {
@@ -7,32 +9,47 @@ namespace LyftEpress.Tests.Services
     {
         ElevatorService _elevatorService;
 
-        [SetUp]
+        Mock<IData> _mockData;
+        Mock<IScheduler> _mockScheduler;
+
+        [OneTimeSetUp]
         public void SetUp()
         {
-            _elevatorService = new ElevatorService();
+            _mockData = new Mock<IData>();
+            _mockScheduler = new Mock<IScheduler>();
+
+            _mockData.Setup(d => d.Initialise(It.IsAny<int>()));
+            _mockScheduler.Setup(s => s.Schedule());
+
+            _elevatorService = new ElevatorService(_mockData.Object, _mockScheduler.Object);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
-        public void ElevatorService_Initialise_Throws_ArgumentOutOfRangeException(int numberOfElevators)
+        [Test]
+        public void ElevatorService_Initialise_Is_Successful()
         {
-            // Assert
+            // Arrange
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => _elevatorService.Initialise(numberOfElevators), nameof(numberOfElevators));
-        }
-
-        [TestCase(1)]
-        [TestCase(10)]
-        public void ElevatorService_Initialise_Creates_Elevators(int numberOfElevators)
-        {
             // Act
 
-            _elevatorService.Initialise(numberOfElevators);
+            _elevatorService.Initialise(It.IsAny<int>());
 
             // Assert
 
-            Assert.That(_elevatorService.Elevators, Has.Count.EqualTo(numberOfElevators));
+            _mockData.Verify(d => d.Initialise(It.IsAny<int>()), Times.Once());
+        }
+
+        [Test]
+        public void ElevatorService_AddRequest_Is_Successful()
+        {
+            // Arrange
+
+            // Act
+
+            _elevatorService.AddRequest(It.IsAny<string>());
+
+            // Assert
+
+            _mockData.Verify(d => d.AddRequest(It.IsAny<string>()), Times.Once());
         }
     }
 }

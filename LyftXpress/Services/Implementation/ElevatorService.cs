@@ -1,28 +1,21 @@
-﻿using LyftXpress.Models;
-using LyftXpress.Services.Abstraction;
+﻿using LyftXpress.Services.Abstraction;
 
 namespace LyftXpress.Services.Implementation
 {
-    public class ElevatorService : IElevator
+    public class ElevatorService(IData dataService, IScheduler scheduler) : IElevator
     {
-        private List<string> UpRequestList { get; set; } = [];
-        private List<string> DownRequestList { get; set; } = [];
-        public List<Elevator> Elevators { get; set; } = [];
+        private readonly IData _dataService = dataService;
+        private readonly IScheduler _scheduler = scheduler;
 
-        public void AddRequest(string request)
+        public void AddRequest(string command)
         {
-            throw new NotImplementedException();
+            _dataService.AddRequest(command);
+            _scheduler.Schedule();
         }
 
         public void Initialise(int numberOfElevators)
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfElevators);
-            
-            Elevators = [];
-            for (int i = 0; i < numberOfElevators; i++)
-            {
-                Elevators.Add(new Elevator());
-            }
+            _dataService.Initialise(numberOfElevators);
         }
 
         public void Move(int elevatorId)
