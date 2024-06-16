@@ -54,6 +54,7 @@ namespace LyftEpress.Tests.Services
             foreach (var elevator in _dataService.Elevators)
             {
                 Assert.That(elevator.Id, Is.Not.Empty);
+                Assert.That(elevator.RequestList, Is.Empty);
                 Assert.That(elevator.Floor, Is.EqualTo(0));
             }
         }

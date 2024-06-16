@@ -15,10 +15,22 @@ namespace LyftXpress.Services.Helpers
 
             return new Request
             {
+                RequestType = RequestType.Fetch,
                 CurrentFloor = currentFloor,
                 DestinationFloor = destinationFloor,
                 Direction = currentFloor < destinationFloor ? Direction.Up : Direction.Down
             }; 
+        }
+
+        public static Request Create(RequestType requestType, int currentFloor, int destinationFloor)
+        {
+            return new Request
+            {
+                RequestType = requestType,
+                CurrentFloor = currentFloor,
+                DestinationFloor = destinationFloor,
+                Direction = currentFloor < destinationFloor ? Direction.Up : Direction.Down
+            };
         }
     }
 }
