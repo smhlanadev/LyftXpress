@@ -8,7 +8,7 @@ namespace LyftXpress.Services.Abstraction
         public List<Request> DownRequestList { get; set; }
         public List<Elevator> Elevators { get; set; }
 
-        void Initialise(int numberOfElevators);
+        void Initialise(int numberOfElevators, int numberOfFloors);
         void AddRequest(string request);
     }
 }

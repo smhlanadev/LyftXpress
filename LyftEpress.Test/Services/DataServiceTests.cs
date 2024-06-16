@@ -20,7 +20,7 @@ namespace LyftEpress.Tests.Services
             _mockData = new Mock<IData>();
             _mockScheduler = new Mock<IScheduler>();
 
-            _mockData.Setup(d => d.Initialise(It.IsAny<int>()));
+            _mockData.Setup(d => d.Initialise(It.IsAny<int>(), It.IsAny<int>()));
             _mockScheduler.Setup(s => s.Schedule());
 
             _dataService = new DataService();
@@ -36,7 +36,7 @@ namespace LyftEpress.Tests.Services
 
             // Assert
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => _dataService.Initialise(numberOfElevators), nameof(numberOfElevators));
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dataService.Initialise(numberOfElevators, 4), nameof(numberOfElevators));
         }
 
         [TestCase(1)]
@@ -45,7 +45,7 @@ namespace LyftEpress.Tests.Services
         {
             // Act
 
-            _dataService.Initialise(numberOfElevators);
+            _dataService.Initialise(numberOfElevators, 4);
 
             // Assert
 

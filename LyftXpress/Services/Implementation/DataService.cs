@@ -10,14 +10,14 @@ namespace LyftXpress.Services.Implementation
         public List<Request> DownRequestList { get; set; } = [];
         public List<Elevator> Elevators { get; set; } = [];
 
-        public void Initialise(int numberOfElevators)
+        public void Initialise(int numberOfElevators, int numberOfFLoors)
         {
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(numberOfElevators);
 
             Elevators = [];
             for (int i = 0; i < numberOfElevators; i++)
             {
-                Elevators.Add(new Elevator());
+                Elevators.Add(new Elevator(numberOfFLoors));
             }
         }
 

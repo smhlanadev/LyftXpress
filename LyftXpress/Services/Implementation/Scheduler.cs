@@ -25,13 +25,13 @@ namespace LyftXpress.Services.Implementation
                     var dispatched = _dataService.Elevators.SelectMany(x => x.RequestList).Any(y => y.RequestType == RequestType.Fetch && y.DestinationFloor == firstRequest.CurrentFloor);
                     if (eligibleUpRequests.Count == 0 && !dispatched)
                     {
-                        closestElevator.RequestList.Add(
+                        closestElevator.AddRequest(
                         RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
                         idleElevators.Remove(closestElevator);
                     }
                     else
                     {
-                        closestElevator.RequestList.AddRange(eligibleUpRequests);
+                        closestElevator.AddRequests(eligibleUpRequests);
 
                         foreach (var req in eligibleUpRequests)
                         {
@@ -50,13 +50,13 @@ namespace LyftXpress.Services.Implementation
                     var dispatched = _dataService.Elevators.SelectMany(x => x.RequestList).Any(y => y.RequestType == RequestType.Fetch && y.DestinationFloor == firstRequest.CurrentFloor);
                     if (eligibleDownRequests.Count == 0 && !dispatched)
                     {
-                        closestElevator.RequestList.Add(
+                        closestElevator.AddRequest(
                         RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
                         idleElevators.Remove(closestElevator);
                     }
                     else
                     {
-                        closestElevator.RequestList.AddRange(eligibleDownRequests);
+                        closestElevator.AddRequests(eligibleDownRequests);
 
                         foreach (var req in eligibleDownRequests)
                         {
@@ -74,7 +74,7 @@ namespace LyftXpress.Services.Implementation
             {
                 var eligibleUpRequests = EligibleRequests(elevator.Floor, elevator.Direction!.Value);
 
-                elevator.RequestList.AddRange(eligibleUpRequests);
+                elevator.AddRequests(eligibleUpRequests);
 
                 foreach (var req in eligibleUpRequests)
                 {
@@ -89,7 +89,7 @@ namespace LyftXpress.Services.Implementation
             {
                 var eligibleDownRequests = EligibleRequests(elevator.Floor, elevator.Direction!.Value);
 
-                elevator.RequestList.AddRange(eligibleDownRequests);
+                elevator.AddRequests(eligibleDownRequests);
 
                 foreach (var req in eligibleDownRequests)
                 {

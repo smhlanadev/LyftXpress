@@ -18,7 +18,7 @@ namespace LyftEpress.Tests.Services
             _mockData = new Mock<IData>();
             _mockScheduler = new Mock<IScheduler>();
 
-            _mockData.Setup(d => d.Initialise(It.IsAny<int>()));
+            _mockData.Setup(d => d.Initialise(It.IsAny<int>(), It.IsAny<int>()));
             _mockScheduler.Setup(s => s.Schedule());
 
             _elevatorService = new ElevatorService(_mockData.Object, _mockScheduler.Object);
@@ -31,11 +31,11 @@ namespace LyftEpress.Tests.Services
 
             // Act
 
-            _elevatorService.Initialise(It.IsAny<int>());
+            _elevatorService.Initialise(It.IsAny<int>(), It.IsAny<int>());
 
             // Assert
 
-            _mockData.Verify(d => d.Initialise(It.IsAny<int>()), Times.Once());
+            _mockData.Verify(d => d.Initialise(It.IsAny<int>(), It.IsAny<int>()), Times.Once());
         }
 
         [Test]

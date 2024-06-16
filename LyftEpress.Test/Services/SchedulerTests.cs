@@ -22,8 +22,8 @@ namespace LyftEpress.Tests.Services
             // Arrange
 
             _dataService.Elevators.Clear();
-            _dataService.Elevators.Add(new Elevator());
-            _dataService.Elevators.Add(new Elevator());
+            _dataService.Elevators.Add(new Elevator(4));
+            _dataService.Elevators.Add(new Elevator(4));
             _dataService.UpRequestList.Clear();
             _dataService.DownRequestList.Clear();
             
@@ -43,8 +43,8 @@ namespace LyftEpress.Tests.Services
             // Arrange
 
             _dataService.Elevators.Clear();
-            _dataService.Elevators.Add(new Elevator());
-            _dataService.Elevators.Add(new Elevator());
+            _dataService.Elevators.Add(new Elevator(4));
+            _dataService.Elevators.Add(new Elevator(4));
 
             _dataService.UpRequestList = [
                 new() { CurrentFloor = 0, DestinationFloor = 1, Direction = Direction.Up },
@@ -74,8 +74,8 @@ namespace LyftEpress.Tests.Services
             // Arrange
 
             _dataService.Elevators.Clear();
-            _dataService.Elevators.Add(new Elevator{ Floor = 1 });
-            _dataService.Elevators.Add(new Elevator { Floor = 1 });
+            _dataService.Elevators.Add(new Elevator(4) { Floor = 1 });
+            _dataService.Elevators.Add(new Elevator(4) { Floor = 1 });
 
             _dataService.UpRequestList = [
                 new() { CurrentFloor = 0, DestinationFloor = 3, Direction = Direction.Up },

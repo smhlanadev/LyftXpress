@@ -13,9 +13,9 @@ namespace LyftXpress.Services.Implementation
             _scheduler.Schedule();
         }
 
-        public void Initialise(int numberOfElevators)
+        public void Initialise(int numberOfElevators, int numberOfFloors)
         {
-            _dataService.Initialise(numberOfElevators);
+            _dataService.Initialise(numberOfElevators, numberOfFloors);
         }
 
         public void Move(int elevatorId)
