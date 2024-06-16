@@ -17,7 +17,7 @@ namespace LyftXpress.Services.Implementation
             Elevators = [];
             for (int i = 0; i < numberOfElevators; i++)
             {
-                Elevators.Add(new Elevator(numberOfFLoors));
+                Elevators.Add(new Elevator(i+1, numberOfFLoors));
             }
         }
 

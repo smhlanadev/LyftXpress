@@ -15,7 +15,7 @@ namespace LyftXpress.Services.Helpers
 
             return new Request
             {
-                RequestType = RequestType.Fetch,
+                RequestType = RequestType.DropOff,
                 CurrentFloor = currentFloor,
                 DestinationFloor = destinationFloor,
                 Direction = currentFloor < destinationFloor ? Direction.Up : Direction.Down

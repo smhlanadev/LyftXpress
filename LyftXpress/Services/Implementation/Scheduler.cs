@@ -27,6 +27,9 @@ namespace LyftXpress.Services.Implementation
                     {
                         closestElevator.AddRequest(
                         RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
+                        closestElevator.AddRequest(firstRequest);
+
+                        _dataService.UpRequestList.Remove(firstRequest);
                         idleElevators.Remove(closestElevator);
                     }
                     else
@@ -52,6 +55,9 @@ namespace LyftXpress.Services.Implementation
                     {
                         closestElevator.AddRequest(
                         RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
+                        closestElevator.AddRequest(firstRequest);
+
+                        _dataService.DownRequestList.Remove(firstRequest);
                         idleElevators.Remove(closestElevator);
                     }
                     else

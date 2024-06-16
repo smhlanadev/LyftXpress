@@ -1,10 +1,12 @@
-﻿namespace LyftXpress.Models
+﻿using System.ComponentModel;
+
+namespace LyftXpress.Models
 {
     public class Elevator
     {
         private List<Request> _requestList;
 
-        public Guid Id { get; init; }
+        public int Id { get; init; }
         public bool IsMoving { get; set; }
         public bool IsOpen { get; set; }
         public int Floor { get; set; }
@@ -20,9 +22,9 @@
             }
         }
 
-        public Elevator(int numberOfFloors)
+        public Elevator(int id, int numberOfFloors)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             _requestList = RequestList = [];
             Floor = 0;
             NumberOfFloors = numberOfFloors;
@@ -44,20 +46,42 @@
         {
             if (_requestList.Count == 0 || IsMoving) return;
 
-            var actionThread = new Thread(MoveElevator);
-            actionThread.Start();
+            IsMoving = true;
+
+            var backgroundWorker = new BackgroundWorker();
+            backgroundWorker.RunWorkerCompleted += (s, e) =>
+            {
+                backgroundWorker.Dispose();
+                Console.WriteLine($"Elevator {Id} requests completed.");
+            };
+            backgroundWorker.DoWork += (s, e) => MoveElevator();
+            backgroundWorker.RunWorkerAsync();
         }
 
         private void MoveElevator()
         {
-            Direction = _requestList[0].Direction;
-            IsMoving = true;
-
-            while (_requestList.Count > 0 && Floor > 0 && Floor < NumberOfFloors)
+            while (_requestList.Count > 0 && Floor >= 0 && Floor <= NumberOfFloors)
             {
+                // If the elevator is fetching, the direction is of the fetch request
+                var fetchRequest = _requestList.FirstOrDefault(x => x.RequestType == RequestType.Fetch);
+                Direction = fetchRequest is not null ? fetchRequest.Direction : _requestList[0].Direction;
+                var elevatorMoved = false;
+
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}");
+
                 Thread.Sleep(1000);
-                if (Direction.Value == Models.Direction.Up) Floor++;
-                else Floor--;
+                if (Direction.Value == Models.Direction.Up && Floor < NumberOfFloors)
+                {
+                    Floor++;
+                    elevatorMoved = true;
+                }
+                else if (Direction.Value == Models.Direction.Down && Floor > 0)
+                {
+                    Floor--;
+                    elevatorMoved = true;
+                }
+
+                if (elevatorMoved) FloorAction();
             }
             IsMoving = false;
         }
@@ -68,9 +92,12 @@
             if (_requestList.Any(x => x.CurrentFloor == Floor || x.DestinationFloor == Floor))
             {
                 IsOpen = true;
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction} Door IsOpen {IsOpen}");
                 Thread.Sleep(1000);
-                _requestList.RemoveAll(x => x.DestinationFloor == Floor);
+                var hasFulfiled = _requestList.Any(x => x.DestinationFloor == Floor);
+                if (hasFulfiled) _requestList.RemoveAll(x => x.DestinationFloor == Floor);
                 IsOpen = false;
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction} Door IsOpen {IsOpen}");
             }
         }
     }
