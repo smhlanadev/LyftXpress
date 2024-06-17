@@ -28,7 +28,7 @@ namespace LyftEpress.Tests.Services
 
         [TestCase(-1)]
         [TestCase(0)]
-        public void DataService_Initialise_Throws_ArgumentOutOfRangeException(int numberOfElevators)
+        public void DataService_Initialise_Invalid_NumberOfElevators_Throws_ArgumentOutOfRangeException(int numberOfElevators)
         {
             // Arrange
 
@@ -39,23 +39,36 @@ namespace LyftEpress.Tests.Services
             Assert.Throws<ArgumentOutOfRangeException>(() => _dataService.Initialise(numberOfElevators, 4), nameof(numberOfElevators));
         }
 
-        [TestCase(1)]
-        [TestCase(10)]
-        public void DataService_Initialise_Creates_Elevators(int numberOfElevators)
+        [TestCase(-1)]
+        [TestCase(0)]
+        public void DataService_Initialise_Invalid_NumberOfFloors_Throws_ArgumentOutOfRangeException(int numberOfFloors)
+        {
+            // Arrange
+
+            // Act
+
+            // Assert
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => _dataService.Initialise(4, numberOfFloors), nameof(numberOfFloors));
+        }
+
+        [TestCase(1, 4)]
+        [TestCase(10, 4)]
+        public void DataService_Initialise_Creates_Elevators(int numberOfElevators, int floors)
         {
             // Act
 
-            _dataService.Initialise(numberOfElevators, 4);
+            _dataService.Initialise(numberOfElevators, floors);
 
             // Assert
 
             Assert.That(_dataService.Elevators, Has.Count.EqualTo(numberOfElevators));
 
-            foreach (var elevator in _dataService.Elevators)
+            for (int i = 0; i < _dataService.Elevators.Count; i++)
             {
-                Assert.That(elevator.Id, Is.Not.Empty);
-                Assert.That(elevator.RequestList, Is.Empty);
-                Assert.That(elevator.Floor, Is.EqualTo(0));
+                Assert.That(_dataService.Elevators[i].Id, Is.EqualTo(i+1));
+                Assert.That(_dataService.Elevators[i].RequestList, Is.Empty);
+                Assert.That(_dataService.Elevators[i].Floor, Is.EqualTo(0));
             }
         }
 

@@ -15,65 +15,54 @@ namespace LyftXpress.Services.Implementation
             // While there are still idle elevators and requests that have not been processed
             while (idleElevators.Count > 0 && (_dataService.UpRequestList.Count > 0 || _dataService.DownRequestList.Count > 0))
             {
-                var canSchedule = idleElevators.Count > 0 && _dataService.UpRequestList.Count > 0;
-                if (canSchedule)
-                {
-                    var firstRequest = _dataService.UpRequestList.First();
-                    var closestElevator = FindNearestElevator(firstRequest.CurrentFloor, idleElevators);
-                    var eligibleUpRequests = EligibleRequests(closestElevator.Floor, firstRequest.Direction);
-
-                    var dispatched = _dataService.Elevators.SelectMany(x => x.RequestList).Any(y => y.RequestType == RequestType.Fetch && y.DestinationFloor == firstRequest.CurrentFloor);
-                    if (eligibleUpRequests.Count == 0 && !dispatched)
-                    {
-                        closestElevator.AddRequest(
-                        RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
-                        closestElevator.AddRequest(firstRequest);
-
-                        _dataService.UpRequestList.Remove(firstRequest);
-                        idleElevators.Remove(closestElevator);
-                    }
-                    else
-                    {
-                        closestElevator.AddRequests(eligibleUpRequests);
-
-                        foreach (var req in eligibleUpRequests)
-                        {
-                            _dataService.UpRequestList.Remove(req);
-                        }
-                        idleElevators.Remove(closestElevator);
-                    }
-                }
-                canSchedule = idleElevators.Count > 0 && _dataService.DownRequestList.Count > 0;
-                if (canSchedule)
-                {
-                    var firstRequest = _dataService.DownRequestList.First();
-                    var closestElevator = FindNearestElevator(firstRequest.CurrentFloor, idleElevators);
-                    var eligibleDownRequests = EligibleRequests(closestElevator.Floor, firstRequest.Direction);
-
-                    var dispatched = _dataService.Elevators.SelectMany(x => x.RequestList).Any(y => y.RequestType == RequestType.Fetch && y.DestinationFloor == firstRequest.CurrentFloor);
-                    if (eligibleDownRequests.Count == 0 && !dispatched)
-                    {
-                        closestElevator.AddRequest(
-                        RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
-                        closestElevator.AddRequest(firstRequest);
-
-                        _dataService.DownRequestList.Remove(firstRequest);
-                        idleElevators.Remove(closestElevator);
-                    }
-                    else
-                    {
-                        closestElevator.AddRequests(eligibleDownRequests);
-
-                        foreach (var req in eligibleDownRequests)
-                        {
-                            _dataService.UpRequestList.Remove(req);
-                        }
-                        idleElevators.Remove(closestElevator);
-                    }
-                }
+                ScheduleIdleElevators(idleElevators, Direction.Up);
+                ScheduleIdleElevators(idleElevators, Direction.Down);
             }
 
-            var direction = Direction.Up;
+            ScheduleMovingElevators(Direction.Up);
+            ScheduleMovingElevators(Direction.Down);
+        }
+
+        private void ScheduleIdleElevators(List<Elevator> idleElevators, Direction direction)
+        {
+            var requestList = new List<Request>();
+            requestList = direction == Direction.Up ? _dataService.UpRequestList : _dataService.DownRequestList;
+
+            var canSchedule = idleElevators.Count > 0 && requestList.Count > 0;
+            if (canSchedule)
+            {
+                var firstRequest = requestList.First();
+                var closestElevator = FindNearestElevator(firstRequest.CurrentFloor, idleElevators);
+                var eligibleUpRequests = EligibleRequests(closestElevator.Floor, firstRequest.Direction);
+
+                var dispatched = _dataService.Elevators.SelectMany(x => x.RequestList).Any(y => y.RequestType == RequestType.Fetch && y.DestinationFloor == firstRequest.CurrentFloor);
+                if (eligibleUpRequests.Count == 0 && !dispatched)
+                {
+                    closestElevator.AddRequest(
+                    RequestHelper.Create(RequestType.Fetch, closestElevator.Floor, firstRequest.CurrentFloor));
+                    closestElevator.AddRequest(firstRequest);
+
+                    requestList.Remove(firstRequest);
+                    idleElevators.Remove(closestElevator);
+                }
+                else
+                {
+                    closestElevator.AddRequests(eligibleUpRequests);
+
+                    foreach (var req in eligibleUpRequests)
+                    {
+                        requestList.Remove(req);
+                    }
+                    idleElevators.Remove(closestElevator);
+                }
+            }
+        }
+
+        private void ScheduleMovingElevators(Direction direction)
+        {
+            var requestList = new List<Request>();
+            requestList = direction == Direction.Up ? _dataService.UpRequestList : _dataService.DownRequestList;
+
             var elevatorsMovingInDirection = _dataService.Elevators.Where(x => x.Direction.HasValue && x.Direction.Value == direction) ?? [];
 
             foreach (var elevator in elevatorsMovingInDirection)
@@ -84,22 +73,7 @@ namespace LyftXpress.Services.Implementation
 
                 foreach (var req in eligibleUpRequests)
                 {
-                    _dataService.UpRequestList.Remove(req);
-                }
-            }
-
-            direction = Direction.Down;
-            elevatorsMovingInDirection = _dataService.Elevators.Where(x => x.Direction.HasValue && x.Direction.Value == direction) ?? [];
-
-            foreach (var elevator in elevatorsMovingInDirection)
-            {
-                var eligibleDownRequests = EligibleRequests(elevator.Floor, elevator.Direction!.Value);
-
-                elevator.AddRequests(eligibleDownRequests);
-
-                foreach (var req in eligibleDownRequests)
-                {
-                    _dataService.DownRequestList.Remove(req);
+                    requestList.Remove(req);
                 }
             }
         }

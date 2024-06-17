@@ -4,6 +4,5 @@
     {
         void Initialise(int numberOfElevators, int numberOfFloors);
         void AddRequest(string request);
-        void Move(int elevatorId);
     }
 }

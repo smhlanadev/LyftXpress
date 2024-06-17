@@ -8,15 +8,14 @@ namespace LyftXpress
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
-
+            // Register services for DI
             var serviceProvider = new ServiceCollection()
             .AddScoped<IData, DataService>()
             .AddScoped<IElevator, ElevatorService>()
             .AddScoped<IScheduler, Scheduler>()
             .BuildServiceProvider();
 
-            var elevatorService = serviceProvider.GetService<IElevator>();
+            
             Instructions();
             Console.WriteLine("Number of floors: ");
             string? input = Console.ReadLine();
@@ -27,6 +26,7 @@ namespace LyftXpress
             if (input == "exit") return;
             var numberOfElevators = int.Parse(input!);
 
+            var elevatorService = serviceProvider.GetService<IElevator>();
             elevatorService!.Initialise(numberOfElevators, numberOfFloors);
 
             var exit = false;
@@ -34,6 +34,7 @@ namespace LyftXpress
 
             while (!exit)
             {
+                // Take input only when key is pressed to allow normal execution of the program
                 var command = string.Empty;
                 if (Console.KeyAvailable)
                 {

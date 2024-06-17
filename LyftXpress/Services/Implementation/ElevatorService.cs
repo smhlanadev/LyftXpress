@@ -7,20 +7,15 @@ namespace LyftXpress.Services.Implementation
         private readonly IData _dataService = dataService;
         private readonly IScheduler _scheduler = scheduler;
 
-        public void AddRequest(string command)
-        {
-            _dataService.AddRequest(command);
-            _scheduler.Schedule();
-        }
-
         public void Initialise(int numberOfElevators, int numberOfFloors)
         {
             _dataService.Initialise(numberOfElevators, numberOfFloors);
         }
 
-        public void Move(int elevatorId)
+        public void AddRequest(string command)
         {
-            throw new NotImplementedException();
+            _dataService.AddRequest(command);
+            _scheduler.Schedule();
         }
     }
 }

@@ -30,12 +30,14 @@ namespace LyftXpress.Models
             NumberOfFloors = numberOfFloors;
         }
 
+        // Could have used the List Add() method here, but I created a custom add method so I can call the Move() method
         public void AddRequest(Request request)
         {
             _requestList.Add(request);
             Move();
         }
 
+        // Could have used the List AddRange() method here, but I created a custom add method so I can call the Move() method
         public void AddRequests(List<Request> requests)
         {
             _requestList.AddRange(requests);
@@ -44,10 +46,12 @@ namespace LyftXpress.Models
 
         public void Move()
         {
+            // No need to continue if there are no requests to process or the elevator is already moving
             if (_requestList.Count == 0 || IsMoving) return;
 
             IsMoving = true;
 
+            // Run this in the background so that it does not halt the UI
             var backgroundWorker = new BackgroundWorker();
             backgroundWorker.RunWorkerCompleted += (s, e) =>
             {
@@ -69,7 +73,7 @@ namespace LyftXpress.Models
 
                 Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}");
 
-                Thread.Sleep(1000);
+                Thread.Sleep(1000); // Adding sleep operations to slow down the movement
                 if (Direction.Value == Models.Direction.Up && Floor < NumberOfFloors)
                 {
                     Floor++;
