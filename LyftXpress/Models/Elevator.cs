@@ -11,7 +11,14 @@ namespace LyftXpress.Models
         public bool IsOpen { get; set; }
         public int Floor { get; set; }
         public Direction? Direction { get; set; }
-        public int NumberOfPassengers { get; set; }
+        public int NumberOfPassengers { get
+            {
+                if (Direction == Models.Direction.Up)
+                    return _requestList.Where(x => x.CurrentFloor <= Floor && x.RequestType == RequestType.DropOff).ToList().Count;
+                else
+                    return _requestList.Where(x => x.CurrentFloor >= Floor && x.RequestType == RequestType.DropOff).ToList().Count;
+            } 
+        }
         public int NumberOfFloors { get; set; }
         public List<Request> RequestList { 
             get => _requestList;
@@ -71,7 +78,7 @@ namespace LyftXpress.Models
                 Direction = fetchRequest is not null ? fetchRequest.Direction : _requestList[0].Direction;
                 var elevatorMoved = false;
 
-                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}");
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}, Passengers {NumberOfPassengers}");
 
                 Thread.Sleep(1000); // Adding sleep operations to slow down the movement
                 if (Direction.Value == Models.Direction.Up && Floor < NumberOfFloors)
@@ -96,12 +103,12 @@ namespace LyftXpress.Models
             if (_requestList.Any(x => x.CurrentFloor == Floor || x.DestinationFloor == Floor))
             {
                 IsOpen = true;
-                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction} Door IsOpen {IsOpen}");
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}, Passengers {NumberOfPassengers} Door IsOpen {IsOpen}");
                 Thread.Sleep(1000);
                 var hasFulfiled = _requestList.Any(x => x.DestinationFloor == Floor);
                 if (hasFulfiled) _requestList.RemoveAll(x => x.DestinationFloor == Floor);
                 IsOpen = false;
-                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction} Door IsOpen {IsOpen}");
+                Console.WriteLine($"Elevator {Id}, Floor {Floor}, Direction {Direction}, Passengers {NumberOfPassengers} Door IsOpen {IsOpen}");
             }
         }
     }
